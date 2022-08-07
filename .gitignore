@@ -26,3 +26,5 @@
 # Other file
 *.log
 
+!**/Makefile
+
