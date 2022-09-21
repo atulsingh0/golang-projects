@@ -1,5 +1,5 @@
 // Go Playground
-// https://go.dev/play/p/Hym81nyA2PB
+// https://go.dev/play/p/enEBiI2_5hd
 
 package main
 
@@ -21,7 +21,7 @@ func genRandomList(num int, max int) []int {
 	rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < num; i++ {
-		// change the seed in every loop
+		// Geneate the random no between 0 to max
 		random_list = append(random_list, rand.Intn(max))
 	}
 	// sorting data
