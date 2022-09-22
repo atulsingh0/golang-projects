@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+type tttMap struct {
+	data map[string]map[string]string
+}
+
 func welcome() {
 	fmt.Println("-------------------------------------------------")
 	fmt.Println("-----------------Tick-Tack-Toe-------------------")
@@ -29,22 +33,23 @@ func getChoice() string {
 
 func letsPlay() {
 
-	pSelect := map[string]map[string]string{
+	gameRules()
+
+	pSelect := tttMap{}
+	pSelect.data = map[string]map[string]string{
 		"0": map[string]string{},
 		"1": map[string]string{},
 		"2": map[string]string{},
 	}
-
-	gameRules()
 
 	players := [2]string{"HUMAN", "MACHINE"}
 	rand.Seed(time.Now().UnixNano())
 	player := players[rand.Intn(2)]
 
 	for {
-		displayGrid(pSelect)
-		pSelect, player = askUserInput(pSelect, player)
-		result, win := getResult(pSelect)
+		pSelect.displayGrid()
+		player = pSelect.askUserInput(player)
+		result, win := pSelect.getResult()
 		if result {
 			fmt.Println("we have the winner")
 			if win == "X" {
@@ -52,7 +57,7 @@ func letsPlay() {
 			} else {
 				fmt.Println("---> brainless MACHINE")
 			}
-			displayGrid(pSelect)
+			pSelect.displayGrid()
 			break
 		}
 	}
@@ -69,13 +74,13 @@ func gameRules() {
 	fmt.Println("=================================\n")
 }
 
-func displayGrid(input map[string]map[string]string) {
+func (pSelect *tttMap) displayGrid() {
 	// fmt.Println(input)
 	for i := 0; i < 3; i++ {
 		fmt.Println("___________________")
 		for j := 0; j < 3; j++ {
 			fmt.Print("|")
-			val := input[strconv.Itoa(i)][strconv.Itoa(j)]
+			val := pSelect.data[strconv.Itoa(i)][strconv.Itoa(j)]
 			if val == "" {
 				val = " "
 			}
@@ -87,10 +92,11 @@ func displayGrid(input map[string]map[string]string) {
 	fmt.Println()
 }
 
-func getResult(input map[string]map[string]string) (bool, string) {
+func (pSelect *tttMap) getResult() (bool, string) {
 
 	var val string = ""
 	var result bool = false
+	input := pSelect.data
 	if input["0"]["0"] != "" && input["0"]["0"] == input["1"]["0"] && input["0"]["0"] == input["2"]["0"] {
 		result = true
 		val = input["0"]["0"]
@@ -129,7 +135,7 @@ func getResult(input map[string]map[string]string) (bool, string) {
 	return result, val
 }
 
-func askUserInput(input map[string]map[string]string, player string) (map[string]map[string]string, string) {
+func (pSelect *tttMap) askUserInput(player string) string {
 
 	var row string
 	var col string
@@ -143,26 +149,26 @@ func askUserInput(input map[string]map[string]string, player string) (map[string
 		fmt.Print("Enter Col: ")
 		fmt.Scan(&col)
 
-		inpValidation = validInput(input, row, col)
+		inpValidation = pSelect.validInput(row, col)
 
 		if inpValidation {
 			if player == "HUMAN" {
-				input[row][col] = "X"
+				pSelect.data[row][col] = "X"
 				player = "MACHINE"
 			} else {
-				input[row][col] = "O"
+				pSelect.data[row][col] = "O"
 				player = "HUMAN"
 			}
 			break
 		}
 	}
-	return input, player
+	return player
 }
 
-func validInput(input map[string]map[string]string, row string, col string) bool {
+func (pSelect *tttMap) validInput(row string, col string) bool {
 
 	switch {
-	case input[row][col] != "":
+	case pSelect.data[row][col] != "":
 		fmt.Println("Location occupied, try again")
 		return false
 
