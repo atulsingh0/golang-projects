@@ -13,23 +13,17 @@ func welcome() {
 	fmt.Println("-------------------------------------------------")
 }
 
-func getChoice() int {
+func getChoice() string {
 
-	var inp string
-	var choice int
+	var choice string
 
 	fmt.Println("\nMenu:")
 	fmt.Println("Press 1 to Play")
 	fmt.Println("Press 0 to Exit")
 	fmt.Print("> ")
 
-	fmt.Scanln(&inp)
+	fmt.Scanln(&choice)
 
-	choice, err := strconv.Atoi(inp)
-	if err != nil {
-		fmt.Println(err)
-		getChoice()
-	}
 	return choice
 }
 
