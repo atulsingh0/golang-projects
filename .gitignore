@@ -27,4 +27,4 @@
 *.log
 
 !**/Makefile
-
+.DS_Store
