@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-const ()
-
 func main() {
 
 	var cels, fahrnht float64
