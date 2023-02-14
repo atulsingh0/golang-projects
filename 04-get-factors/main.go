@@ -1,17 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 
-	fmt.Println(getFactors(27))
-	fmt.Println(getFactors(12))
-	fmt.Println(getFactors(11))
+	no := 97
+	fmt.Printf("Factors of no %v: %v\n", no, getFactors(no))
 
-	fmt.Println("24 is a Prime num:", isPrime(24))
-	fmt.Println("17 is a Prime num:", isPrime(17))
-	fmt.Println("97 is a Prime num:", isPrime(97))
+	start := time.Now()
+	fmt.Printf("%v is a Prime num: %v\n", no, isPrime(no))
+	fmt.Printf("Total time: %v\n", time.Since(start))
 
+	no = 1043
+	fmt.Printf("\nFactors of no %v: %v\n", no, getFactors(no))
+
+	start = time.Now()
+	fmt.Printf("%v is a Prime num: %v\n", no, isPrime(no))
+	fmt.Printf("Total time: %v\n", time.Since(start))
+
+	no = 10437
+	fmt.Printf("\nFactors of no %v: %v\n", no, getFactors(no))
+
+	start = time.Now()
+	fmt.Printf("%v is a Prime num: %v\n", no, isPrime(no))
+	fmt.Printf("Total time: %v\n", time.Since(start))
 }
 
 func getFactors(num int) []int {
@@ -27,6 +42,9 @@ func getFactors(num int) []int {
 }
 
 func isPrime(num int) bool {
+
+	// bootforce method to identify if no is prime
+	// this algo will take more CPU time as input no is increasing
 	if len(getFactors(num)) == 2 {
 		return true
 	}
