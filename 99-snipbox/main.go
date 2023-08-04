@@ -34,9 +34,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 func snipView(w http.ResponseWriter, r *http.Request) {
 
 	// Only GET method is valid
-	if r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Method Not Allowed"))
+	if r.Method != http.MethodGet {
+		// Use http.Error method
+		// w.WriteHeader(http.StatusMethodNotAllowed)
+		// w.Write([]byte("Method Not Allowed"))
+		w.Header().Set("Allow", http.MethodGet)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	w.Write([]byte("Viewing a snippet"))
@@ -44,11 +47,12 @@ func snipView(w http.ResponseWriter, r *http.Request) {
 
 func snipCreate(w http.ResponseWriter, r *http.Request) {
 	// Only POST method is valid
-	if r.Method != "POST" {
+	if r.Method != http.MethodPost {
 		// All the changes in header should be done before calling WriteHeader method
-		w.Header().Set("Allow", "POST")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Method Not Allowed"))
+		w.Header().Set("Allow", http.MethodPost)
+		// w.WriteHeader(http.StatusMethodNotAllowed)
+		// w.Write([]byte("Method Not Allowed"))
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	w.Write([]byte("Creating a snippet"))
