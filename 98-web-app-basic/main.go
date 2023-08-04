@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/atulsingh0/golang-projects/98-web-app-basic/homepage"
+	"98-web-app-basic/homepage"
 
-	"github.com/atulsingh0/golang-projects/98-web-app-basic/server"
+	"98-web-app-basic/server"
 )
 
 func main() {
