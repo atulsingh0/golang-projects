@@ -1,24 +1,10 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
+	"strconv"
 )
-
-func main() {
-
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snip/view", snipView)
-	mux.HandleFunc("/snip/create", snipCreate)
-
-	log.Println("Starting server on :4000")
-
-	if err := http.ListenAndServe(`:4000`, mux); err != nil {
-		log.Fatal("Unable to start server", err.Error())
-	}
-}
 
 func home(w http.ResponseWriter, r *http.Request) {
 
@@ -35,14 +21,24 @@ func snipView(w http.ResponseWriter, r *http.Request) {
 
 	// Only GET method is valid
 	if r.Method != http.MethodGet {
+		w.Header().Set("Allow", http.MethodGet)
+
 		// Use http.Error method
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
-		w.Header().Set("Allow", http.MethodGet)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	w.Write([]byte("Viewing a snippet"))
+
+	// Processing URL Query
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	// w.Write([]byte("Viewing a snippet"))
+	// using Fprintf func
+	fmt.Fprintf(w, "Viewing a snippet with ID %d", id)
 }
 
 func snipCreate(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +46,7 @@ func snipCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		// All the changes in header should be done before calling WriteHeader method
 		w.Header().Set("Allow", http.MethodPost)
+
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
