@@ -10,10 +10,16 @@ type Handlers struct {
 }
 
 func (h *Handlers) HomeHandler(w http.ResponseWriter, r *http.Request) {
-	h.logger.Println("request processed")
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte("Welcome! to GO World"))
+	w.Write([]byte("Welcome! to Go World"))
+}
+
+func (h *Handlers) Logger(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		h.logger.Println("Request received")
+		next(w, r)
+	}
 }
 
 func NewHandlers(logger *log.Logger) *Handlers {
