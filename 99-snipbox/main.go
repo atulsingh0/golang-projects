@@ -22,6 +22,7 @@ func main() {
 
 func home(w http.ResponseWriter, r *http.Request) {
 
+	// URL should be strictly "/"
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -31,9 +32,24 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func snipView(w http.ResponseWriter, r *http.Request) {
+
+	// Only GET method is valid
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("Method Not Allowed"))
+		return
+	}
 	w.Write([]byte("Viewing a snippet"))
 }
 
 func snipCreate(w http.ResponseWriter, r *http.Request) {
+	// Only POST method is valid
+	if r.Method != "POST" {
+		// All the changes in header should be done before calling WriteHeader method
+		w.Header().Set("Allow", "POST")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("Method Not Allowed"))
+		return
+	}
 	w.Write([]byte("Creating a snippet"))
 }
