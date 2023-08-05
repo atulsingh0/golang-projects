@@ -24,7 +24,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 	// URL should not have suffix "/"
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 	files := []string{
@@ -34,14 +34,12 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 
 	if err := ts.ExecuteTemplate(w, "base", nil); err != nil {
-		app.errorLog.Println(err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 	// w.Write([]byte("Hello from home page!"))
@@ -56,14 +54,14 @@ func (app *application) snipView(w http.ResponseWriter, r *http.Request) {
 		// Use http.Error method
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 
 	// Processing URL Query
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 	// w.Write([]byte("Viewing a snippet"))
@@ -79,7 +77,7 @@ func (app *application) snipCreate(w http.ResponseWriter, r *http.Request) {
 
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Write([]byte("Creating a snippet"))
