@@ -29,20 +29,17 @@ func main() {
 	}
 
 	// Define Server
-	mux := http.NewServeMux()
+	srv := &http.Server{
+		Addr:     *addr,
+		ErrorLog: errorLog,
+		// Call the new app.routes() method to get the servemux containing our routes.
+		Handler: app.routes(),
+	}
 
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", neuter(fileServer)))
-
-	// Register Handlers
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet/view", app.snipView)
-	mux.HandleFunc("/snippet/create", app.snipCreate)
-
-	log.Printf("Starting server on %s\n", *addr)
+	infoLog.Printf("Starting server on %s\n", *addr)
 
 	// Starting Server
-	if err := http.ListenAndServe(*addr, mux); err != nil {
-		log.Fatal("Unable to start server", err.Error())
+	if err := srv.ListenAndServe(); err != nil {
+		errorLog.Fatal("Unable to start server", err.Error())
 	}
 }
