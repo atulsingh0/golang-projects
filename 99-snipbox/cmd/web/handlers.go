@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-// Using below middileware function to parse the /static uri
+// Using below middileware function for handling the /static uri
+// for blocking URL injections
 func neuter(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/") {
@@ -20,11 +20,11 @@ func neuter(next http.Handler) http.Handler {
 	})
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
-	// URL should be strictly "/"
+	// URL should not have suffix "/"
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 	files := []string{
@@ -34,20 +34,18 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 
 	if err := ts.ExecuteTemplate(w, "base", nil); err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 	// w.Write([]byte("Hello from home page!"))
 }
 
-func snipView(w http.ResponseWriter, r *http.Request) {
+func (app *application) snipView(w http.ResponseWriter, r *http.Request) {
 
 	// Only GET method is valid
 	if r.Method != http.MethodGet {
@@ -56,14 +54,14 @@ func snipView(w http.ResponseWriter, r *http.Request) {
 		// Use http.Error method
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 
 	// Processing URL Query
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 	// w.Write([]byte("Viewing a snippet"))
@@ -71,7 +69,7 @@ func snipView(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Viewing a snippet with ID %d", id)
 }
 
-func snipCreate(w http.ResponseWriter, r *http.Request) {
+func (app *application) snipCreate(w http.ResponseWriter, r *http.Request) {
 	// Only POST method is valid
 	if r.Method != http.MethodPost {
 		// All the changes in header should be done before calling WriteHeader method
@@ -79,7 +77,7 @@ func snipCreate(w http.ResponseWriter, r *http.Request) {
 
 		// w.WriteHeader(http.StatusMethodNotAllowed)
 		// w.Write([]byte("Method Not Allowed"))
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Write([]byte("Creating a snippet"))

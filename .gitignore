@@ -27,4 +27,5 @@
 *.log
 
 !**/Makefile
+!**/Dockerfile
 .DS_Store
