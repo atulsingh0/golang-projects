@@ -10,7 +10,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	mux.Handle("/static/", http.StripPrefix("/static", neuter(fileServer)))
 
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/snippet/view", snipView)

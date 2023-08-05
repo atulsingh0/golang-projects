@@ -6,7 +6,19 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 )
+
+// Using below middileware function to parse the /static uri
+func neuter(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/") {
+			http.NotFound(w, r)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
 
 func home(w http.ResponseWriter, r *http.Request) {
 
