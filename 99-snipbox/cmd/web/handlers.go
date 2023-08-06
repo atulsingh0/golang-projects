@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
+	"snippet/internal/models"
 	"strconv"
 	"strings"
 )
@@ -67,6 +69,19 @@ func (app *application) snipView(w http.ResponseWriter, r *http.Request) {
 	// w.Write([]byte("Viewing a snippet"))
 	// using Fprintf func
 	fmt.Fprintf(w, "Viewing a snippet with ID %d", id)
+
+	snippet, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	// Write the snippet data as a plain-text HTTP response body.
+	fmt.Fprintf(w, "%+v", snippet)
 }
 
 func (app *application) snipCreate(w http.ResponseWriter, r *http.Request) {

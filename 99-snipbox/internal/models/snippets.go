@@ -2,8 +2,12 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
+
+// Errors
+var ErrNoRecord = errors.New("models: no matching record found")
 
 // Define a Snippet type to hold the data for an individual snippet. Notice how
 // the fields of the struct correspond to the fields in our MySQL snippets
@@ -47,7 +51,31 @@ func (m *SnippetModel) Insert(title string, content string, expires int) (int, e
 
 // This will return a specific snippet based on its id.
 func (m *SnippetModel) Get(id int) (*Snippet, error) {
-	return nil, nil
+
+	stmt := `SELECT id, title, content, created, expires FROM snippets
+    WHERE expires > UTC_TIMESTAMP() AND id = ?`
+
+	row := m.DB.QueryRow(stmt, id)
+
+	// Initialize a pointer to a new zeroed Snippet struct.
+	s := &Snippet{}
+
+	// Mapping row to Snippet type
+	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+	if err != nil {
+		// If the query returns no rows, then row.Scan() will return a
+		// sql.ErrNoRows error. We use the errors.Is() function check for that
+		// error specifically, and return our own ErrNoRecord error
+		// instead (we'll create this in a moment).
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	// If everything went OK then return the Snippet object.
+	return s, nil
 }
 
 // This will return the 10 most recently created snippets.
