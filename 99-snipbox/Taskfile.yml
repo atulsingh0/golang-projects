@@ -22,6 +22,7 @@ tasks:
     desc: Check go.mod is tidy
     cmds:
       - go mod tidy -v
+      - go mod verify
       - git diff --exit-code -- go.mod go.sum
 
   help:
