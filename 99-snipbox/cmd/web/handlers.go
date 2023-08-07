@@ -7,6 +7,7 @@ import (
 	"snippet/internal/models"
 	"strconv"
 	"strings"
+	"text/template"
 )
 
 // Using below middileware function for handling the /static uri
@@ -77,7 +78,7 @@ func (app *application) snipView(w http.ResponseWriter, r *http.Request) {
 	}
 	// w.Write([]byte("Viewing a snippet"))
 	// using Fprintf func
-	fmt.Fprintf(w, "Viewing a snippet with ID %d", id)
+	// fmt.Fprintf(w, "Viewing a snippet with ID %d", id)
 
 	snippet, err := app.snippets.Get(id)
 	if err != nil {
@@ -89,8 +90,30 @@ func (app *application) snipView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write the snippet data as a plain-text HTTP response body.
-	fmt.Fprintf(w, "%+v", snippet)
+	// Initialize a slice containing the paths to the view.tmpl file,
+	// plus the base layout and navigation partial that we made earlier.
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html",
+		"./ui/html/pages/view.tmpl.html",
+	}
+
+	// Parse the template files...
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	// And then execute them. Notice how we are passing in the snippet
+	// data (a models.Snippet struct) as the final parameter?
+	err = ts.ExecuteTemplate(w, "base", snippet)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	// // Write the snippet data as a plain-text HTTP response body.
+	// fmt.Fprintf(w, "%+v", snippet)
 }
 
 func (app *application) snipCreate(w http.ResponseWriter, r *http.Request) {
