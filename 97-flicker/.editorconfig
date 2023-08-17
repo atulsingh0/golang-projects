@@ -3,8 +3,9 @@
 # top-most EditorConfig file
 root = true
 
-[Makefile]
+[{Makefile,go.mod,go.sum,*.go,.gitmodules}]
 indent_style = tab
+indent_size = 4
 
 [*.yml,*.yaml]
 indent_style = space
