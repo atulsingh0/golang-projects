@@ -3,7 +3,7 @@
 # top-most EditorConfig file
 root = true
 
-[{Makefile,go.mod,go.sum,*.go,.gitmodules}]
+[{Makefile,Taskfile,go.mod,go.sum,*.go,.gitmodules}]
 indent_style = tab
 indent_size = 4
 
