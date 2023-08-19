@@ -1,0 +1,38 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Running the Application
+    summary: Execute the api
+    cmds:
+      - go run .
+
+  fmt:
+    desc: Code Format
+    summary: Go Fomar the code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Code Linting
+    summary: Lint the project files with golangci-lint
+    cmds:
+      - go fmt ./...
+
+  test:
+    desc: Run the tests
+    cmds:
+      - go test ./... -race -count 1
+
+  check-go-mod:
+    desc: Check go.mod is tidy
+    cmds:
+      - go mod tidy -v
+      - go mod verify
+      - git diff --exit-code -- go.mod go.sum
+
+  help:
+    desc: Help for the CLI
+    summary: Display help information
+    cmds:
+      - go run ./cmd/web -help
