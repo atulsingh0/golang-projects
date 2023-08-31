@@ -27,7 +27,6 @@ func main() {
 	fmt.Printf("Decoded Ceaser Cipher: %s", ceaser_decoder(out, shift))
 }
 
-
 func ceaser_cipher(data string, shift int) string {
 	out := []byte{}
 	for _, v := range []byte(data) {
@@ -59,7 +58,7 @@ func ceaser_decoder(data string, shift int) string {
 		i := int(v)
 
 		if v >= 65 && v <= 90 {
-			if i = i - shift; i < 65  {
+			if i = i - shift; i < 65 {
 				i = i + 90 - 65 + 1
 			}
 		}
