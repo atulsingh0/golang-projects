@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"math/rand"
 	"sort"
-	"time"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 func genRandomList(num int, max int) []int {
 
 	var random_list []int
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < num; i++ {
 		// Geneate the random no between 0 to max

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
 type tttMap struct {
@@ -43,7 +42,7 @@ func letsPlay() {
 	}
 
 	players := [2]string{"HUMAN", "MACHINE"}
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 	player := players[rand.Intn(2)]
 
 	for {
