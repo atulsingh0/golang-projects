@@ -5,7 +5,7 @@ tasks:
     desc: Running the Application
     summary: Execute the api
     cmds:
-      - go run .
+      - go run ./main.go
 
   fmt:
     desc: Code Format
