@@ -1,0 +1,3 @@
+module websvc
+
+go 1.23.6
