@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/Users/atul/work/golang-projects/025-webservice-jwt/main.go</title>
+<meta name="colorscheme" content="tokyonight-night"></meta>
+<style>
+* {font-family: monospace}
+body {background-color: #1a1b26; color: #c0caf5}
+.String {color: #9ece6a}
+.-variable-parameter {color: #e0af68}
+.Statement {color: #bb9af7}
+.-property {color: #73daca}
+.Type {color: #2ac3de}
+.Special {color: #2ac3de}
+.-operator {color: #89ddff}
+.-type-builtin {color: #27a1b9}
+.Whitespace {color: #3b4261}
+.PreProc {color: #7dcfff}
+.-spell {}
+.-keyword-function {color: #bb9af7}
+.-variable {color: #c0caf5}
+.-punctuation-delimiter {color: #89ddff}
+.-punctuation-bracket {color: #a9b1d6}
+.Function {color: #7aa2f7}
+</style>
+</head>
+<body style="display: flex">
+<pre>
+<span class="PreProc">package</span> <span class="PreProc">main</span>
+
+<span class="PreProc">import</span> <span class="-punctuation-bracket">(</span>
+<span class="Whitespace">»   </span><span class="String">&quot;log&quot;</span>
+<span class="Whitespace">»   </span><span class="String">&quot;net/http&quot;</span>
+<span class="-punctuation-bracket">)</span>
+
+<span class="-keyword-function">func</span> <span class="-variable"><span class="Function">main</span></span><span class="-punctuation-bracket">(</span><span class="-punctuation-bracket">)</span> <span class="-punctuation-bracket">{</span>
+
+<span class="Whitespace">»   </span><span class="-variable">mux</span> <span class="-operator">:=</span> <span class="-variable">http</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">NewServeMux</span></span><span class="-punctuation-bracket">(</span><span class="-punctuation-bracket">)</span>
+
+<span class="Whitespace">»   </span><span class="-variable">mux</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">HandleFunc</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;/&quot;</span></span><span class="-punctuation-delimiter">,</span> <span class="-keyword-function">func</span><span class="-punctuation-bracket">(</span><span class="-variable"><span class="-variable-parameter">w</span></span> <span class="PreProc">http</span><span class="-punctuation-delimiter">.</span><span class="Type">ResponseWriter</span><span class="-punctuation-delimiter">,</span> <span class="-variable"><span class="-variable-parameter">r</span></span> <span class="-operator">*</span><span class="PreProc">http</span><span class="-punctuation-delimiter">.</span><span class="Type">Request</span><span class="-punctuation-bracket">)</span> <span class="-punctuation-bracket">{</span>
+<span class="Whitespace">»   </span><span class="Whitespace">»   </span><span class="-variable">w</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Write</span></span><span class="-punctuation-bracket">(</span><span class="-punctuation-bracket">[</span><span class="-punctuation-bracket">]</span><span class="Type"><span class="-type-builtin">byte</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;Welcom to JWT&quot;</span></span><span class="-punctuation-bracket">)</span><span class="-punctuation-bracket">)</span>
+<span class="Whitespace">»   </span><span class="-punctuation-bracket">}</span><span class="-punctuation-bracket">)</span>
+
+<span class="Whitespace">»   </span><span class="-variable">mux</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">HandleFunc</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;/gen&quot;</span></span><span class="-punctuation-delimiter">,</span> <span class="-variable">generate</span><span class="-punctuation-bracket">)</span>
+
+<span class="Whitespace">»   </span><span class="-variable">err</span> <span class="-operator">:=</span> <span class="-variable">http</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">ListenAndServe</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;:8888&quot;</span></span><span class="-punctuation-delimiter">,</span> <span class="-variable">mux</span><span class="-punctuation-bracket">)</span>
+
+<span class="Whitespace">»   </span><span class="Statement">if</span> <span class="-variable">err</span> <span class="-operator">!=</span> <span class="Special">nil</span> <span class="-punctuation-bracket">{</span>
+<span class="Whitespace">»   </span><span class="Whitespace">»   </span><span class="-variable">log</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Fatal</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;Server is unable to start&quot;</span></span><span class="-punctuation-bracket">)</span>
+<span class="Whitespace">»   </span><span class="-punctuation-bracket">}</span>
+<span class="-punctuation-bracket">}</span>
+
+<span class="-keyword-function">func</span> <span class="-variable"><span class="Function">generate</span></span><span class="-punctuation-bracket">(</span><span class="-variable"><span class="-variable-parameter">w</span></span> <span class="PreProc">http</span><span class="-punctuation-delimiter">.</span><span class="Type">ResponseWriter</span><span class="-punctuation-delimiter">,</span> <span class="-variable"><span class="-variable-parameter">r</span></span> <span class="-operator">*</span><span class="PreProc">http</span><span class="-punctuation-delimiter">.</span><span class="Type">Request</span><span class="-punctuation-bracket">)</span> <span class="-punctuation-bracket">{</span>
+<span class="Whitespace">»   </span><span class="-variable">log</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Println</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;Calling Req:&quot;</span></span><span class="-punctuation-delimiter">,</span> <span class="-variable">r</span><span class="-punctuation-delimiter">.</span><span class="-property">RequestURI</span><span class="-punctuation-bracket">)</span>
+<span class="Whitespace">»   </span><span class="-variable">w</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Header</span></span><span class="-punctuation-bracket">(</span><span class="-punctuation-bracket">)</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Add</span></span><span class="-punctuation-bracket">(</span><span class="String"><span class="-spell">&quot;Server&quot;</span></span><span class="-punctuation-delimiter">,</span> <span class="String"><span class="-spell">&quot;jwt&quot;</span></span><span class="-punctuation-bracket">)</span>
+<span class="Whitespace">»   </span><span class="-variable">msg</span> <span class="-operator">:=</span> <span class="String"><span class="-spell">&quot;this is me calling from generate&quot;</span></span>
+<span class="Whitespace">»   </span><span class="-variable">w</span><span class="-punctuation-delimiter">.</span><span class="-property"><span class="Function">Write</span></span><span class="-punctuation-bracket">(</span><span class="-punctuation-bracket">[</span><span class="-punctuation-bracket">]</span><span class="Type"><span class="-type-builtin">byte</span></span><span class="-punctuation-bracket">(</span><span class="-variable">msg</span><span class="-punctuation-bracket">)</span><span class="-punctuation-bracket">)</span>
+<span class="-punctuation-bracket">}</span>
+
+</pre>
+</body>
+</html>
